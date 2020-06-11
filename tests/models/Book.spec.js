@@ -7,6 +7,7 @@ const {
 const { expect, factory } = require("../test_helper");
 
 const Book = require("../../models/book");
+const Author = require("../../models/author");
 
 describe("Book", () => {
   const DescribedModel = Book(sequelize, dataTypes);
@@ -42,6 +43,15 @@ describe("Book", () => {
           message: "Validation error: You need to set a title!",
         });
       }
+    });
+  });
+
+  describe("associations", () => {
+    before(() => {
+      DescribedModel.associate({ Author });
+    });
+    it("defines a belongsTo association with Author", () => {
+      expect(DescribedModel.belongsTo).to.have.been.calledWith(Author);
     });
   });
 });
