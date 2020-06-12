@@ -3,7 +3,7 @@ const supertest = require("supertest");
 // const expect = require("chai").expect;
 const jsonResponse = require("../jsonResponse");
 const { expect, factory } = require("../test_helper");
-let server, request, response;
+let server, request, response, token;
 
 before((done) => {
   server = app.listen(done);
@@ -27,20 +27,36 @@ afterEach(async () => {
 });
 
 describe("GET /api/v1/book", () => {
-  beforeEach(async () => {
-    response = await request.get("/api/v1/books");
+  describe("For non-authenticated user", () => {
+    beforeEach(async () => {
+      response = await request.get("/api/v1/books");
+    });
+    it("should response with 401", () => {
+      expect(response.status).to.equal(401);
+    });
   });
 
-  it("response with status 200", () => {
-    expect(response.status).to.equal(200);
-  });
-  it("response with a collection of books", () => {
-    const expectedBody = {
-      books: [
-        { id: 1, title: "A Book", author: { name: "ali" } },
-        { id: 2, title: "Another Book", author: { name: "ali" } },
-      ],
-    };
-    expect(jsonResponse(response)).to.equal(JSON.stringify(expectedBody));
+  describe("For authenticated user", () => {
+    beforeEach(async () => {
+      await request
+        .post("/api/v1/auth/login")
+        .send({ email: "user@random.com", password: "password" })
+        .then((response) => {
+          token = response.body.token;
+        });
+      response = await request.get("/api/v1/books").set("Authorization", token);
+    });
+    it("response with status 200", () => {
+      expect(response.status).to.equal(200);
+    });
+    it("response with a collection of books", () => {
+      const expectedBody = {
+        books: [
+          { id: 1, title: "A Book", author: { name: "ali" } },
+          { id: 2, title: "Another Book", author: { name: "ali" } },
+        ],
+      };
+      expect(jsonResponse(response)).to.equal(JSON.stringify(expectedBody));
+    });
   });
 });
