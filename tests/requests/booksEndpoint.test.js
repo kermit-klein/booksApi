@@ -1,8 +1,8 @@
-const app = require("../app");
+const app = require("../../app");
 const supertest = require("supertest");
 // const expect = require("chai").expect;
-const jsonResponse = require("./jsonResponse");
-const { expect, factory } = require("./test_helper");
+const jsonResponse = require("../jsonResponse");
+const { expect, factory } = require("../test_helper");
 let server, request, response;
 
 before((done) => {

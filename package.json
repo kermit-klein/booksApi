@@ -19,6 +19,7 @@
     "chai-subset": "^1.6.0",
     "factory-girl": "^5.0.4",
     "mocha": "^7.2.0",
+    "nodemon": "^2.0.4",
     "sequelize-test-helpers": "^1.2.2",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
