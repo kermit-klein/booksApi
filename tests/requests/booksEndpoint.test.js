@@ -40,9 +40,12 @@ describe("GET /api/v1/book", () => {
     beforeEach(async () => {
       await request
         .post("/api/v1/auth/login")
-        .send({ email: "user@random.com", password: "password" })
+        .send({ email: "ali@mail.com", password: "password" })
         .then((response) => {
-          token = response.body.token;
+          token = response.body.token; // save token for future use in the test
+        })
+        .catch((error) => {
+          console.log(error);
         });
       response = await request.get("/api/v1/books").set("Authorization", token);
     });
