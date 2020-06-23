@@ -12,10 +12,15 @@ module.exports = (passport) => {
       models.Author.findOne({ where: { email: payload.email } })
         .then((user) => {
           //success use exists
-          return done(null, {
-            id: user.id,
-            email: user.email,
-          });
+          if (user.validatePassword(payload.password)) {
+            return done(null, {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+            });
+          } else {
+            return done(null, false, { message: "Incorrect password" });
+          }
         })
         .catch((error) => {
           console.log(error);

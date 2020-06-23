@@ -15,7 +15,12 @@ after((done) => {
 });
 
 beforeEach(async () => {
-  const author = await factory.create("Author", { id: 100, name: "ali" });
+  const author = await factory.create("Author", {
+    id: 100,
+    name: "ali",
+    email: "ali@mail.com",
+    password: "password",
+  });
   await factory.createMany("Book", 2, [
     { id: 1, title: "A Book", authorId: author.id },
     { id: 2, title: "Another Book", authorId: author.id },
@@ -55,8 +60,16 @@ describe("GET /api/v1/book", () => {
     it("response with a collection of books", () => {
       const expectedBody = {
         books: [
-          { id: 1, title: "A Book", author: { name: "ali" } },
-          { id: 2, title: "Another Book", author: { name: "ali" } },
+          {
+            id: 1,
+            title: "A Book",
+            author: { name: "ali", email: "ali@mail.com" },
+          },
+          {
+            id: 2,
+            title: "Another Book",
+            author: { name: "ali", email: "ali@mail.com" },
+          },
         ],
       };
       expect(jsonResponse(response)).to.equal(JSON.stringify(expectedBody));
